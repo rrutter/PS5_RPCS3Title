@@ -91,3 +91,16 @@ Technical:
   Accurate SPU Reservations off, Accurate Cache Line Stores on, PPU Threads 1,
   SPU Wake-Up Delay 400us, Accurate SPU DMA on
 - next blocker: gyro/tilt data path (ps5 pad sample -> cellPad motion bytes)
+
+## The gyro pipeline (lab) - Night Attack unblocked
+
+Story: the frontend reported the sixaxis sensors at rest forever; the crossbow bolt
+never steered. The console's 120-byte pad sample carried the IMU all along (accel at
+0x1c, gyro at 0x28, floats). Now wired end to end; the pad declares sensor mode.
+
+Technical:
+- platform.c reads the sample IMU floats; the shared pad struct carries them
+- ps5_pad_handler maps them to the 4 sixaxis sensors (dualsense handler formula)
+- field test 1: worked, but left/right inverted; yaw-flip: no change (wrong channel)
+- field test 2: flip accel_x AND roll (gyro_z); pad-trace.txt telemetry logs the raw
+  IMU at 1 Hz so a tilt names any wrong axis empirically
