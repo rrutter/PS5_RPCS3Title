@@ -75,3 +75,19 @@ Technical:
 - config Log section reset to {} for the series (flight A1 froze never-woke variant
   under full trace; that timing may be unrepresentative)
 - status printer + SPURS dump + mailbox counters stay on (passive reads only)
+
+## 🏆 THE WALL BROKEN (Series A, flight 2) — v0.1-lab
+
+Story: Saiyan achieved, and the dreaded transition PASSED — the next FMV played, the
+main menu came up, and Chapter 1 went FIGHT-COMPLETE, FMV, FIGHT-COMPLETE, chapter
+done. Two full fights at ~15fps on the interpreter. The only standing wall: the
+Night Attack crossbow section needs SIXAXIS tilt and the frontend does not wire the
+DualSense gyros through.
+
+Technical:
+- what landed it: variance + cumulative levers + light instrumentation (the race wins
+  sometimes now); single-cause attribution is honestly impossible - the honest record
+- standing config: interpreter both, MSAA off, audio Null, boot music off,
+  Accurate SPU Reservations off, Accurate Cache Line Stores on, PPU Threads 1,
+  SPU Wake-Up Delay 400us, Accurate SPU DMA on
+- next blocker: gyro/tilt data path (ps5 pad sample -> cellPad motion bytes)
