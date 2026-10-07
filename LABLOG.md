@@ -14,6 +14,11 @@ Baseline config deltas from RPCS3 defaults, in the order they were earned:
 | 7 | SPU Wake-Up Delay | 200us | run15/16: all SPURS kernels idle at pc 0x11a8 while game waits (lost wakeup theory) | NO CHANGE (run16 identical) |
 | 8 | Accurate SPU DMA | true | run16: kernels never see work - job-list DMA may be dropped/raced on the fast path | testing run17 |
 | 9 | Nuke BCUS98132 cache+dev_hdd0 install (rpcs3/cache/cache/BCUS98132, dev_hdd0/game/BCUS98132, dev_hdd1) | forums.rpcs3.net thread-206225: identical black-screen-at-transition fixed by wiping game-titled cache/hdd folders; our crashes since run8 wrote into caches mid-death | testing run18 |
+| 10 | Log: {: Trace} in config.yml | the CORRECT full-trace lever: logs::reset() at boot wipes pre-boot set_level calls, THEN the config Log section applies - my flag-file set_level never survived boot (run19/20: zero .T lines). RPCS3 archives document exactly this reset dance (PR 18445 zone) | testing run21 |
+
+Note: lever 8 (Accurate SPU DMA) tested with 9 in run18 - sterile baseline + both = identical
+freeze at the same zone. Debris theory dead. Timing theory dead. Run18 signature unchanged:
+kernels idle 0x11a8, main_thread 0xa4e118, mutex_destroy EBUSY x3 right before.
 
 Lab code commits (PS5_RPCS3@lab): b5badc57c fatal stack-walk; bbae4d9ba status line lists SPU threads.
 Title: 9d299c7 link emits eboot.map.
