@@ -15,7 +15,8 @@ Baseline config deltas from RPCS3 defaults, in the order they were earned:
 | 8 | Accurate SPU DMA | true | run16: kernels never see work - job-list DMA may be dropped/raced on the fast path | testing run17 |
 | 9 | Nuke BCUS98132 cache+dev_hdd0 install (rpcs3/cache/cache/BCUS98132, dev_hdd0/game/BCUS98132, dev_hdd1) | forums.rpcs3.net thread-206225: identical black-screen-at-transition fixed by wiping game-titled cache/hdd folders; our crashes since run8 wrote into caches mid-death | testing run18 |
 | 10 | Log: {"": Trace} in config.yml | INERT: empty-string key exact-matches NO channel (set_level's exact-match branch no-ops). run21 proved it: zero .T lines | dead end |
-| 11 | Log: {".*": Trace} | set_level's REGEX branch (metachars in key) sweeps ALL channels, and configure_logs re-applies the config at every boot-time reset point - survives the reset dance that killed the code-side set_level | testing run22 |
+| 11 | Log: {".*": Trace} | WORKED (run22: 2.47M .T lines) but SELF-DEFEATING: the 256MiB log capped at 0:00:22 - PPU schedule/syscall spam drowned everything; the freeze never got logged | dead end |
+| 12 | Log: {cellSpurs, sys_spu, sys_event, sys_event_flag: Trace} | surgical: only the SPURS kick/completion + event channels; volume sane, cap never hit | testing run23 |
 
 Note: lever 8 (Accurate SPU DMA) tested with 9 in run18 - sterile baseline + both = identical
 freeze at the same zone. Debris theory dead. Timing theory dead. Run18 signature unchanged:
