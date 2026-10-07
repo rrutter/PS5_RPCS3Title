@@ -118,3 +118,19 @@ Technical:
 - config: Performance Overlay Enabled + framerate/frametime graphs on
 - honesty note: fps reads via flips; the overlay renders via RSX overlays (if the
   overlay fails to draw on this build, the trace already logs flips/5s as fallback)
+
+## ASMJIT flight series (run36-37)
+
+Story: the ASMJIT flag turns menus from 5-10fps to a LOCKED 60fps - the SPU JIT
+road works on-console. But a deterministic deadlock appears at the menu->game
+load transition: main_thread parks in sys_mutex_lock at 0xd242ac forever while
+the SPURS kernels sit at their asmjit wait point (0x26bc) and workload 0 shows
+ALL tasks completed (rc 0+7). The SPU work finishes; the completion signal to
+the PPU side never lands. Identical state both runs = not a race, a broken
+handshake. Levers A/B (wake-up delays 0) armed by the fork's own config
+normalization; C (PPU Threads 2) made no difference. Next cell: PPU Threads 1.
+
+Technical:
+- symptom: deterministic freeze, flips frozen, heap stable, zero fatals
+- evidence: mb w0/c0, sig 0000/0000, w0{s2 rc 0+7 ct 0>0>5} - work done, no wake
+- reported upstream as a comment on issue #1
