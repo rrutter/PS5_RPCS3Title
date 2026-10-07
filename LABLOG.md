@@ -134,3 +134,26 @@ Technical:
 - symptom: deterministic freeze, flips frozen, heap stable, zero fatals
 - evidence: mb w0/c0, sig 0000/0000, w0{s2 rc 0+7 ct 0>0>5} - work done, no wake
 - reported upstream as a comment on issue #1
+
+## 🏆 v0.3-lab — the merge, the music, and the heartbeat on tape
+
+Story: merged KongaTime''s entire 40-commit day into the lab (their thread-priority
+fix, executable-memory fix, SPU-LLVM collision work, file census, launcher - and
+SOUND: the PS5''s own audio output; HS''s menu theme plays now). The field test
+that followed: the interpreter build ran past the old freeze zone without a single
+wedge. And the full-spectrum DMA spy finally captured the healthy SPURS heartbeat
+we will diff every JIT run against: the kernels mark life via PUTLLC atomics on
+the instance struct''s two cache lines, 82 times on the reference tape, idle 31
+throughout. The bug is officially out of places to hide.
+
+Technical:
+- merge: PS5_RPCS3 origin/main @fe4968bd9 + title origin/main @1666d2f into lab
+  (one conflict: status trace keeps our SPU/SPURS sections AND their open-files watch)
+- audio: upstream 607da383e (console output) + a9a35e152 (audio thread priority)
+  carried by the merge; CellAudio provider live with default device
+- dma spy v2: notice-level (trace is filtered), self-healing 1s flag re-check,
+  +/-4KB window, WRITE side + PUTLLUC + PUTLLC + list elements
+- GOLD reference (gold-interp-dma/): healthy = PUTLLC x82 @5631a300/+0x80 from
+  kernel PCs 0x011e4/0x01350/0x01f38, plus 512B workload reads at +2816; idle 31
+- the JIT wedge signature to kill: idle stays 0 -> SPURS stops dispatching ->
+  the game spins on an empty completed-jobs list at guest 0xd242ac
