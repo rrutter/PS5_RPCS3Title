@@ -104,3 +104,17 @@ Technical:
 - field test 1: worked, but left/right inverted; yaw-flip: no change (wrong channel)
 - field test 2: flip accel_x AND roll (gyro_z); pad-trace.txt telemetry logs the raw
   IMU at 1 Hz so a tilt names any wrong axis empirically
+
+## 🏹 v0.2-lab — the SIXAXIS milestone
+
+Story: tilt steers the bolt. Night Attack is playable. The crossbow tracks with the
+hands - verified on console by the pilot himself. And because the next war is
+performance, the on-screen FPS counter is now armed: RPCS3's Performance Overlay
+renders through the RSX overlay system (which upstream just wired for the console).
+
+Technical:
+- gyro mapping: accel x/y/z via dualsense formula; G sensor = -gyro_z (roll rate),
+  field-tested and confirmed; the pad declares CELL_PAD_CAPABILITY_SENSOR_MODE
+- config: Performance Overlay Enabled + framerate/frametime graphs on
+- honesty note: fps reads via flips; the overlay renders via RSX overlays (if the
+  overlay fails to draw on this build, the trace already logs flips/5s as fallback)
