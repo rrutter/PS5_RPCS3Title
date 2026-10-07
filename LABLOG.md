@@ -45,3 +45,5 @@ completion event between SPURS kernel and PPU side never lands.
   kernels park at 0x11a8 (NOT the upstream-tested 0x11e4 task-wait - image/layout differs),
   game spins on ReadyCountStore forever.
 - OPEN: SPU-side DMA-in coherence (kernel reads of the struct) - the untested mile.
+
+## run32 instrument: SPU DMA spy (spurs-dma-trace.txt + SPU:Trace) - reads into the SPURS struct logged with offset+bytes; verdict pending.
