@@ -180,3 +180,24 @@ Technical:
 - horizon honesty: SPU-JIT + PPU-interp is a midpoint; 30fps needs their PPU-LLVM
   (README today: the home menu runs on it). The interpreter build is the playable
   baseline meanwhile - stable, audio in, past the old freeze zone
+
+## THE CONVICTION (leg B tape vs gold): the task that never ends
+
+Story: the diff landed clean. Healthy interpreter: 82 PUTLLC atomics from all five
+kernels across both SPURS struct lines, plus workload-info DMA reads. Wedged
+SPU-LLVM: TWO atomics (kernel3 alone, +0x80 only), the spuIdling line (+0x00)
+NEVER touched, zero reads. And the park address gave it away: 0x26bc is past the
+2KB kernel image - the SPUs are stuck INSIDE a guest TASK (workload code at
+0xA00+), not the kernel idle loop. The task spins on its MFC tag completion; the
+machinery that completes DMA (do_mfc) is pumped by the interpreter loop, which a
+tight JIT''d spin never visits. The task never finishes -> kernel never idles ->
+SPURS stops dispatching -> the game''s completed-jobs list stays empty -> main
+spins at 0xd242ac. Works slow, starves fast, deterministic, config-immune.
+
+Technical:
+- gold: PUTLLC x82 (PCs 0x011e4/0x01350/0x01f38), reads @+2816, idle 31
+- llvm: PUTLLC x2 (kernel3, +0x80, 0:00:10), idle 0, park 0x26bc (task region)
+- kernel images: 0x800 bytes at LS 0x0; workloads load at 0xA00+
+- fix direction: find where the fork''s JIT lost the do_mfc pump (upstream PC
+  RPCS3 survives tight tag-spins - the periodic escape/check_state must exist
+  there; the fork''s SPUThread changes are the diff surface)
