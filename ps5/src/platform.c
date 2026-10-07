@@ -259,6 +259,14 @@ pad_fill(const struct pad_player_state *state, struct pad *pad)
    pad->right_y = stick(state->last.right_y);
    pad->l2 = state->last.l2 / 255.0f;
    pad->r2 = state->last.r2 / 255.0f;
+   /* The IMU floats ride the sample's reserved span: acceleration at 0x1c,
+      angular velocity at 0x28 (the layout PS5 homebrew documents). */
+   {
+      const float *accel = (const float *)((const char *)&state->last + 0x1c);
+      const float *gyro  = (const float *)((const char *)&state->last + 0x28);
+      pad->accel_x = accel[0]; pad->accel_y = accel[1]; pad->accel_z = accel[2];
+      pad->gyro_x = gyro[0];   pad->gyro_y = gyro[1];   pad->gyro_z = gyro[2];
+   }
 }
 
 void

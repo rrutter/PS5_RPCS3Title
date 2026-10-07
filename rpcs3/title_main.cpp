@@ -36,6 +36,8 @@ struct rpcs3_ps5_pad {
 	uint32_t buttons;
 	float left_x, left_y, right_x, right_y;
 	float l2, r2;
+	float accel_x, accel_y, accel_z; /* G, the pad's IMU */
+	float gyro_x, gyro_y, gyro_z;    /* angular velocity */
 };
 enum : uint32_t {
 	RPCS3_PS5_UP = 1u << 0, RPCS3_PS5_DOWN = 1u << 1, RPCS3_PS5_LEFT = 1u << 2, RPCS3_PS5_RIGHT = 1u << 3,
@@ -92,6 +94,8 @@ void pollPads(rpcs3_ps5_pad pads[rpcs3_ps5_pad_players])
 		out.right_y = in.right_y;
 		out.l2 = in.l2;
 		out.r2 = in.r2;
+		out.accel_x = in.accel_x; out.accel_y = in.accel_y; out.accel_z = in.accel_z;
+		out.gyro_x = in.gyro_x;   out.gyro_y = in.gyro_y;   out.gyro_z = in.gyro_z;
 	}
 }
 

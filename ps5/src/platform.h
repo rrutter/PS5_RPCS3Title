@@ -46,6 +46,8 @@ struct pad {
    uint32_t pressed; /* buttons that went down since the last poll */
    float left_x, left_y, right_x, right_y; /* -1..1, a dead zone removed; y is down-positive */
    float l2, r2;                           /* 0..1 */
+   float accel_x, accel_y, accel_z;        /* G, the sample's IMU (at 0x1c) */
+   float gyro_x, gyro_y, gyro_z;           /* angular velocity, the sample's (0x28) */
 };
 
 /* Up to four players, one per signed-in user: the console pairs each controller
