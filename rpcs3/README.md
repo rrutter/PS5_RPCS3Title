@@ -67,13 +67,27 @@ RPCS3 installs it into `rpcs3/dev_flash/`, once. Then, with nothing named to boo
 a launch boots the PS3's home menu.
 
 `/app0/rpcs3-boot.txt` (the title's folder on the console) names what to boot, on its
-first line: an ELF, or a game's folder. Without it RPCS3 starts, reports in klog whether
-the PS3 system software is installed, and stops.
+first line: an ELF, or a game's folder (booted through its `EBOOT.BIN`; a disc's
+`PKGDIR` packages install at its first boot). Without it the PS3 home menu boots.
+
+Measured on my console (PS5_RPCS3 0cc0383, both recompilers): the Ratchet & Clank
+Collection (BCUS98282, a disc folder) booted, ran its menu and its video at full
+speed, and started Ratchet & Clank 1 through exitspawn; the game ran at 60 fps,
+New Game, saving from the pause menu and loading from the main menu worked
+through RPCS3's native save data list. With PS5_RPCS3 607da38 it had sound,
+through the console's own output (libSceAudioOut). Each game's first boot
+compiles for several minutes with the screen still.
 
 ## Not done
 
-- LLVM: built in and chosen by default, but not yet run on the console;
-  `/app0/rpcs3-interpreter.txt` (any content) goes back to the interpreters.
-- Sound (the null backend), firmware and package installation, a game list.
+- LLVM's first compile is slow, and compiling as code first runs leaves the
+  screen still: on my console (PS5_RPCS3 5864031, both recompilers, one compile
+  thread) the PS3 home menu drew from 40 s, stood still from 100 s to 270 s while
+  24 modules compiled, then ran at 60 fps (3597 RSX flips a minute) for the 40
+  minutes it was left. `/app0/rpcs3-interpreter.txt` goes back to the
+  interpreters (`ppu` or `spu` alone for one), `/app0/rpcs3-llvm-threads.txt`
+  bounds the compile threads, `/app0/rpcs3-llvm-logs.txt` keeps each PPU
+  module's IR beside it.
+- Installing PSN packages, a game list.
 - The console's 16 KiB pages against RPCS3's 4 KiB memory protection, and its
   thread-local storage (emulated on the console: every access is a call).

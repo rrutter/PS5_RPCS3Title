@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <fstream>
+#include <cstdlib>
 #include <mutex>
 #include <string>
 
@@ -114,6 +115,24 @@ void trace(const char *line)
 }
 
 } // namespace
+
+// RADV's shader cache (Mesa's multipart database, /app0/radv-shader-cache)
+// keeps two files open for each of its parts in each cache, 50 parts by
+// default, and a title holds about 249 files open by path at once
+// (PS5_PayloadSDK's platform/docs/PROBE.md). On the console the cache had
+// grown into every part: about 200 files were open before a game opened one,
+// and GTA IV, then R&C and X-Men, failed in sys_fs_open with EMFILE (the
+// census of 496fa5f: 4 open in each part). Four parts hold about 16. Set
+// before anything creates a Vulkan device, in a static initialiser, ahead of
+// the template's own start
+namespace
+{
+	const int radv_cache_parts = []
+	{
+		setenv("MESA_DISK_CACHE_DATABASE_NUM_PARTS", "4", 0);
+		return 4;
+	}();
+}
 
 extern "C" int ps5_title_main(void)
 {

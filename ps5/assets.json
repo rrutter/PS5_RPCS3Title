@@ -36,6 +36,114 @@
       "licence": "CC0-1.0",
       "url": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Lantern",
       "changes": "parent nodes centre it and scale it to 1.6, 5.5 and 8 tall, one .gltf for each sample"
+    },
+    {
+      "path": "fonts/Inter-Regular.ttf",
+      "from": "file",
+      "source": "ps5/assets/fonts/Inter-Regular.ttf",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "Inter Regular",
+      "author": "The Inter Project Authors (Rasmus Andersson)",
+      "licence": "OFL-1.1",
+      "url": "https://github.com/rsms/inter",
+      "licence_file": "licenses/OFL-1.1-Inter.txt",
+      "changes": "a static instance of the variable font (google/fonts at 7085eb89a950), subset to Latin, by ps5/tools/launcher-art.py"
+    },
+    {
+      "path": "fonts/Inter-Medium.ttf",
+      "from": "file",
+      "source": "ps5/assets/fonts/Inter-Medium.ttf",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "Inter Medium",
+      "author": "The Inter Project Authors (Rasmus Andersson)",
+      "licence": "OFL-1.1",
+      "url": "https://github.com/rsms/inter",
+      "licence_file": "licenses/OFL-1.1-Inter.txt",
+      "changes": "a static instance of the variable font (google/fonts at 7085eb89a950), subset to Latin, by ps5/tools/launcher-art.py"
+    },
+    {
+      "path": "fonts/Inter-SemiBold.ttf",
+      "from": "file",
+      "source": "ps5/assets/fonts/Inter-SemiBold.ttf",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "Inter SemiBold",
+      "author": "The Inter Project Authors (Rasmus Andersson)",
+      "licence": "OFL-1.1",
+      "url": "https://github.com/rsms/inter",
+      "licence_file": "licenses/OFL-1.1-Inter.txt",
+      "changes": "a static instance of the variable font (google/fonts at 7085eb89a950), subset to Latin, by ps5/tools/launcher-art.py"
+    },
+    {
+      "path": "fonts/Inter-Bold.ttf",
+      "from": "file",
+      "source": "ps5/assets/fonts/Inter-Bold.ttf",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "Inter Bold",
+      "author": "The Inter Project Authors (Rasmus Andersson)",
+      "licence": "OFL-1.1",
+      "url": "https://github.com/rsms/inter",
+      "licence_file": "licenses/OFL-1.1-Inter.txt",
+      "changes": "a static instance of the variable font (google/fonts at 7085eb89a950), subset to Latin, by ps5/tools/launcher-art.py"
+    },
+    {
+      "path": "launcher/rpcs3-logo.png",
+      "from": "file",
+      "source": "ps5/assets/launcher/rpcs3-logo.png",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "The launcher's logo",
+      "author": "kongatime (PS5 RPCS3 title)",
+      "licence": "MIT",
+      "url": "https://github.com/KongaTime/ps5_rpcs3title",
+      "changes": "drawn by ps5/tools/launcher-art.py: kongatime's crowned 3 (ps5/art/icon-source.webp) as a rounded tile, and the word RPCS3 drawn with Orbitron Medium (OFL-1.1, The Orbitron Project Authors), which is not shipped"
+    },
+    {
+      "path": "launcher/mark.png",
+      "from": "file",
+      "source": "ps5/assets/launcher/mark.png",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "The launcher intro's mark",
+      "author": "kongatime (PS5 RPCS3 title)",
+      "licence": "MIT",
+      "url": "https://github.com/KongaTime/ps5_rpcs3title",
+      "changes": "drawn by ps5/tools/launcher-art.py: kongatime's crowned 3 (ps5/art/icon-source.webp) as a rounded tile, 450 pixels square"
+    },
+    {
+      "path": "launcher/intro.wav",
+      "from": "file",
+      "source": "ps5/assets/launcher/intro.wav",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "The launcher intro's sound",
+      "author": "kongatime (PS5 RPCS3 title)",
+      "licence": "MIT",
+      "url": "https://github.com/KongaTime/ps5_rpcs3title",
+      "changes": "synthesised by ps5/tools/intro-sound.py from sine and saw waves and noise; nothing sampled"
+    },
+    {
+      "path": "launcher/trash.png",
+      "from": "file",
+      "source": "ps5/assets/launcher/trash.png",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "The launcher's Delete icon",
+      "author": "kongatime (PS5 RPCS3 title)",
+      "licence": "MIT",
+      "url": "https://github.com/KongaTime/ps5_rpcs3title",
+      "changes": "drawn by ps5/tools/launcher-art.py"
     }
   ]
 }

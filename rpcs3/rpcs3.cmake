@@ -43,11 +43,14 @@ file(GLOB llvm_archives CONFIGURE_DEPENDS ${ROOT}/.deps/native/llvm-ps5/lib/libL
 # (fork, setsid, wait4, umask, fstatfs, fchown: refused as a title has none of
 # them), and in6addr_any (RPCS3's networking): the SDK's libSceNet stub defines it, but
 # the module gives a title no such export, and the shell refused to start the
-# title that imported it ("can't start the game or app")
+# title that imported it ("can't start the game or app"); and realpath, which
+# libc++'s std::filesystem canonical paths are built on: the console refuses it
+# to a title (EPERM), and the package installer could not resolve its
+# installation directory (the Ratchet & Clank Collection disc's PKGDIR)
 set(rpcs3_libc_bindings)
 foreach(name getpagesizes syscall times statfs accept4 if_nametoindex if_indextoname
 		getnameinfo gai_strerror isatty pathconf getpwnam_r posix_madvise strsignal sbrk
-		fork setsid wait4 umask fstatfs fchown in6addr_any)
+		fork setsid wait4 umask fstatfs fchown in6addr_any realpath)
 	list(APPEND rpcs3_libc_bindings --defsym=${name}=ps5_${name})
 endforeach()
 
@@ -82,8 +85,13 @@ foreach(flag ${rpcs3_libc_bindings} ${rpcs3_weak_undefined})
 endforeach()
 file(WRITE ${rpcs3_local_map} "{\n    local:\n${rpcs3_local_names}};\n")
 
+# Every open by path the program makes, recorded by name (PS5_RPCS3's
+# rpcs3/ps5/ps5_fdtrack.cpp): a title holds about 249 files at once, and GTA
+# IV's boot ran out of them with most opened outside RPCS3's own fs
+set(rpcs3_file_wraps --wrap=open --wrap=openat --wrap=fopen)
+
 set(PS5_TITLE_LINK_INPUTS --start-group ${rpcs3_archives} ${ffmpeg_archives} ${iconv_archive} ${llvm_archives} --end-group
-	${rpcs3_libc_bindings} ${rpcs3_weak_undefined} --version-script ${rpcs3_local_map})
+	${rpcs3_libc_bindings} ${rpcs3_weak_undefined} ${rpcs3_file_wraps} --version-script ${rpcs3_local_map})
 set(PS5_TITLE_LINK_DEPENDS ${rpcs3_archives})
 list(LENGTH rpcs3_archives rpcs3_archive_count)
 message(STATUS "RPCS3: linking ${rpcs3_archive_count} archives from ${rpcs3_build}")
@@ -93,9 +101,23 @@ message(STATUS "RPCS3: linking ${rpcs3_archive_count} archives from ${rpcs3_buil
 # the title carries a readable copy of its code segment, rpcs3-code.bin
 # (rpcs3/code-copy.py; PS5_RPCS3's Utilities/Thread.cpp reads it)
 function(ps5_title_post_link)
+	# PS5_RPCS3's checkout, found as rpcs3/build-rpcs3.sh finds it
+	set(rpcs3_src "$ENV{RPCS3_SRC}")
+	if(NOT rpcs3_src)
+		foreach(candidate ${ROOT}/../PS5_RPCS3 ${ROOT}/../ps5_rpcs3)
+			if(EXISTS ${candidate}/rpcs3/CMakeLists.txt)
+				set(rpcs3_src ${candidate})
+				break()
+			endif()
+		endforeach()
+	endif()
 	file(READ ${ROOT}/ps5/sce_sys/param.json rpcs3_param)
 	string(JSON rpcs3_title_id GET "${rpcs3_param}" titleId)
+	# And RPCS3's overlay images (bin/Icons/ui: the pad's buttons, the save
+	# list's "new" entry, the spinner), which its native dialogs load from
+	# /app0/rpcs3/Icons/ui/; RPCS3's own, under its licence
 	add_custom_command(TARGET title POST_BUILD
 		COMMAND python3 ${ROOT}/rpcs3/code-copy.py ${CMAKE_BINARY_DIR}/link/llvm-pie.elf ${ROOT}/dist/${rpcs3_title_id}/rpcs3-code.bin
+		COMMAND ${CMAKE_COMMAND} -E copy_directory ${rpcs3_src}/bin/Icons/ui ${ROOT}/dist/${rpcs3_title_id}/rpcs3/Icons/ui
 		VERBATIM)
 endfunction()
