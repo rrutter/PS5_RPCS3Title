@@ -63,3 +63,15 @@ Technical:
 - run33 freeze-state: kernels at 0x11a8 (idle loop), w1 never allocated (ct 0)
 - Series A: SPU Wake-Up Delay 400us (was 200). Series B next: Driver Wake-Up Delay.
   Series C: Max SPURS Threads 6->4. Two to three runs each before judgment.
+
+## Protocol correction: the observer effect
+
+Story: at full trace we ran ~1 frame per 5s — the logging overhead warps the exact
+timing race we are measuring. Lever series now run LIGHT: status-line instruments
+only (they cost ~nothing), trace channels OFF. Heavy trace comes back only when a
+specific story needs telling.
+
+Technical:
+- config Log section reset to {} for the series (flight A1 froze never-woke variant
+  under full trace; that timing may be unrepresentative)
+- status printer + SPURS dump + mailbox counters stay on (passive reads only)
