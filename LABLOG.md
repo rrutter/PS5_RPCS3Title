@@ -33,3 +33,15 @@ Superseded by upstream: a72e85600 (null audio layout) == upstream 8014376f8 (ind
 Current enemy: combat-init freeze. Game parks main_thread @ guest 0xa4e118; all 5
 CellSpursKernelN idle at SPU pc 0x11a8 (wait-for-work); FMOD mixer alive. A kick or
 completion event between SPURS kernel and PPU side never lands.
+
+## The instrumented autopsy chain (runs 24-31, lab builds)
+- run24 (lever 13): no change. 61029 ReadyCountStore polls; kernels mb w0/c0 always.
+- Coherence test (live SPURS page, padding xB8): mirror/base/read32 all agree (BE twin
+  efbeadde = correct) - WRITES LAND. light_op path innocent.
+- Decay watch: xB8 sentinel persisted 68 pulses - no page-level stomp (caveat: xB8 sits
+  past the kernels 0x00-0xB4 hot region).
+- Full surgical trace: ZERO SPU-thread-originated events ever; write_spu_mb never called.
+- PROVEN FREEZE ANATOMY: workloads RUNNABLE, game requests 5 SPUs, contention never rises,
+  kernels park at 0x11a8 (NOT the upstream-tested 0x11e4 task-wait - image/layout differs),
+  game spins on ReadyCountStore forever.
+- OPEN: SPU-side DMA-in coherence (kernel reads of the struct) - the untested mile.
