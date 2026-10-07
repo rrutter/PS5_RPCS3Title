@@ -47,3 +47,5 @@ completion event between SPURS kernel and PPU side never lands.
 - OPEN: SPU-side DMA-in coherence (kernel reads of the struct) - the untested mile.
 
 ## run32 instrument: SPU DMA spy (spurs-dma-trace.txt + SPU:Trace) - reads into the SPURS struct logged with offset+bytes; verdict pending.
+
+## run32 RESULT: THE DISEASE MOVED - allocation WORKS (w1 rc5 ct 5>0>5, idle 0); kernels WOKE (pcs 0x1d0xx dispatch region, off the 0x11a8 idle loop) but jobs never complete. Invisible enemies = SPU-skinned models never computed. Next: spy watches do_list_transfer (job-ELF loading door); SPU:Trace removed (flooded log to cap).
