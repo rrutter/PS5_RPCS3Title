@@ -17,7 +17,8 @@ Baseline config deltas from RPCS3 defaults, in the order they were earned:
 | 10 | Log: {"": Trace} in config.yml | INERT: empty-string key exact-matches NO channel (set_level's exact-match branch no-ops). run21 proved it: zero .T lines | dead end |
 | 11 | Log: {".*": Trace} | WORKED (run22: 2.47M .T lines) but SELF-DEFEATING: the 256MiB log capped at 0:00:22 - PPU schedule/syscall spam drowned everything; the freeze never got logged | dead end |
 | 12 | Log: {cellSpurs, sys_spu, sys_event, sys_event_flag: Trace} | surgical: only the SPURS kick/completion + event channels; volume sane, cap never hit | testing run23 |
-| 13 | Accurate Cache Line Stores | true | run19+traced: kernels never act while jobs queue - SPURS hands job descriptors over 128B cache-line writes; sloppy line stores can lose the pickup write | testing run24 |
+| 13 | Accurate Cache Line Stores | true | run19+traced: kernels never act while jobs queue - SPURS hands job descriptors over 128B cache-line writes; sloppy line stores can lose the pickup write | NO CHANGE (run24: identical freeze, kernels 0x11a8, 61029 ReadyCountStore polls) |
+| 14 | +sys_lwmutex/sys_lwcond/sys_mutex/sys_cond at Trace (config only) | the SPURS handler wakeup rides lwcond_signal; freeze zone keeps spitting mutex EBUSY/ESRCH - catch the lock-layer story at the scene | testing run26 |
 
 UPSTREAM REPORT FILED: KongaTime/PS5_RPCS3Title issue #1 (full anatomy + wall chain).
 
