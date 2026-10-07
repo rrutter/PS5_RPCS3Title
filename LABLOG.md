@@ -49,3 +49,17 @@ completion event between SPURS kernel and PPU side never lands.
 ## run32 instrument: SPU DMA spy (spurs-dma-trace.txt + SPU:Trace) - reads into the SPURS struct logged with offset+bytes; verdict pending.
 
 ## run32 RESULT: THE DISEASE MOVED - allocation WORKS (w1 rc5 ct 5>0>5, idle 0); kernels WOKE (pcs 0x1d0xx dispatch region, off the 0x11a8 idle loop) but jobs never complete. Invisible enemies = SPU-skinned models never computed. Next: spy watches do_list_transfer (job-ELF loading door); SPU:Trace removed (flooded log to cap).
+
+## THE VARIANCE DISCOVERY (runs 32/33 + field report)
+
+Story: identical builds die at three different depths. Run32: kernels woke, workload
+allocated all 5 SPUs, froze mid-job. Run33: kernels never woke, no allocation, earlier
+freeze. Field run: enemies rendered AND Saiyan achieved before freezing. => the SPURS
+kick/wake is a RACE the console sometimes wins. Races have levers; variance demands
+repetition, so each lever gets 2-3 flights for signal.
+
+Technical:
+- run32 freeze-state: kernels at 0x1d0xx (dispatch region), w1 rc 5+0 ct 5>0>5, idle 0
+- run33 freeze-state: kernels at 0x11a8 (idle loop), w1 never allocated (ct 0)
+- Series A: SPU Wake-Up Delay 400us (was 200). Series B next: Driver Wake-Up Delay.
+  Series C: Max SPURS Threads 6->4. Two to three runs each before judgment.
