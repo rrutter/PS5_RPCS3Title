@@ -157,3 +157,26 @@ Technical:
   kernel PCs 0x011e4/0x01350/0x01f38, plus 512B workload reads at +2816; idle 31
 - the JIT wedge signature to kill: idle stays 0 -> SPURS stops dispatching ->
   the game spins on an empty completed-jobs list at guest 0xd242ac
+
+## Strategy session (pre-leg-B): the suspects re-ranked
+
+Story: before burning a flight on the PUTLLC theory, we read both JITs'' atomic
+emission - and ASMJIT doesn''t inline atomics AT ALL (it shares the interpreter''s
+C++ path). Yet ASMJIT wedged identically to LLVM (which does inline). The atomics
+are mostly acquitted without spending a console trip. New prime suspect: the
+pump cadence - the interpreter''s loop does constant bookkeeping (MFC completion,
+event processing, flag checks) between instructions; JIT''d code runs long native
+stretches without it. If the kernel''s idle-settling needs that machinery pumped,
+JIT starves it -> idle stays 0 -> SPURS stops dispatching -> the game spins.
+Fits every symptom: JIT-family-wide, deterministic, immune to every config lever.
+
+Technical:
+- suspect ranking: (1) JIT-starves-the-pump, (2) escape-path boundary miss
+  (kernels park at 0x26bc vs interpreter''s 0x11a8), (3) atomics (weakened)
+- leg B tape discriminates all three: PUTLLC spam = reservations; heartbeat
+  absent = kernel never reaches scheduling; heartbeat present + idle 0 = bad data
+- standing rule added: check KongaTime''s repos at session start (they commit on
+  this layer daily; the merge cycle is proven ~25 min)
+- horizon honesty: SPU-JIT + PPU-interp is a midpoint; 30fps needs their PPU-LLVM
+  (README today: the home menu runs on it). The interpreter build is the playable
+  baseline meanwhile - stable, audio in, past the old freeze zone
