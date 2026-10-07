@@ -12,6 +12,7 @@ Baseline config deltas from RPCS3 defaults, in the order they were earned:
 | 5 | Accurate SPU Reservations | false | run10: RDCH -> reservation_notifier mutex throw (EDEADLK on console mutexes) | gameplay sustained |
 | 6 | PPU Threads | 1 | shrink TLS-emulation race surface | fatal -> freeze (same zone) |
 | 7 | SPU Wake-Up Delay | 200us | run15/16: all SPURS kernels idle at pc 0x11a8 while game waits (lost wakeup theory) | NO CHANGE (run16 identical) |
+| 8 | Accurate SPU DMA | true | run16: kernels never see work - job-list DMA may be dropped/raced on the fast path | testing run17 |
 
 Lab code commits (PS5_RPCS3@lab): b5badc57c fatal stack-walk; bbae4d9ba status line lists SPU threads.
 Title: 9d299c7 link emits eboot.map.
