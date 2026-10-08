@@ -269,3 +269,17 @@ Technical:
   contention (shelved per captain: read-ahead buffering + internal staging are
   the future fixes); audio buffer 34ms restored; signal/dma/spurs-trace floods
   retired; frame-gen counter visible (0 = off)
+
+## The merge bisector verdict (run82-era)
+
+Story: full interpreter on the merged stack = GAMEPLAY. The Oct-8 KongaTime
+merge is innocent; the dispatch/kick disease is purely JIT-side. The playable
+baseline is confirmed on the newest code, and the split-brain fix (kernels
+interpret under a JIT build) stays - it cured the livelock regardless.
+
+Technical:
+- merged stack + full interpreter: plays through the load-in (pre-merge behavior)
+- the JIT disease stands alone: kernels halt at 0x818 (HBRR event-sleep) before
+  subscribing the +0x00 line, so the reservation-LR kick never reaches them
+- next experiment: interpreter.txt=spu (PPU-LLVM + SPU-interp) - native game
+  logic, interpreted SPU; possibly the playable-fast midpoint
