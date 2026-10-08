@@ -201,3 +201,23 @@ Technical:
 - fix direction: find where the fork''s JIT lost the do_mfc pump (upstream PC
   RPCS3 survives tight tag-spins - the periodic escape/check_state must exist
   there; the fork''s SPUThread changes are the diff surface)
+
+## The LSA-in-EAL mixup (the wedge, named at last)
+
+Story: the ring of truth + the gold ring, diffed. Healthy kernels write
+MFC_LSA=0x2d80 (a LOCAL-store buffer address) as a GETLLAR parameter - normal.
+Under SPU-LLVM the executed GETLLAR carried eal=0x2d80: the local-store address
+sitting in the EFFECTIVE-address slot. The atomic fires at an unmapped low page,
+never completes, RdAtomicStat never answers, the kernel spins at 0x26bc, idle
+never marks, SPURS stops dispatching, the game wedges at 0xd242ac. Deterministic,
+JIT-wide, immune to every config lever - because it is a JIT parameter-staging
+bug, not a semantic one.
+
+Technical:
+- gold ring: wrch 10 2d80 (MFC_LSA write) at pc 0x1860/0x192c; zero low-EA atomics
+- wedged ring: mfc d0 2d80 (GETLLAR with eal=LSA) then silence; the +0x00 line
+  (spuIdling) never touched under JIT
+- doctrine update: WE fix what we find (self-reliance); upstream PRs only for
+  fundamentally-theirs bugs, lean and human
+- next: asmjit ring (shared bug or LLVM-specific), then read the JITs'' MFC
+  fixed-register flush for the miswire
