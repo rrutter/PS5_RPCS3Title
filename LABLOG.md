@@ -221,3 +221,29 @@ Technical:
   fundamentally-theirs bugs, lean and human
 - next: asmjit ring (shared bug or LLVM-specific), then read the JITs'' MFC
   fixed-register flush for the miswire
+
+## 🏆 v0.4-lab — THE MIXUP FALLS: credits, menu, and a working JIT front half
+
+Story: the wedge we chased for a week got named, shamed, and partially slain in
+one night. The ring of truth caught it red-handed: under BOTH JITs, a back-to-back
+GETLLAR fired with the local-store address (0x2d80) sitting in the effective-address
+slot - the atomic shot at an unmapped page, never completed, and five SPURS kernels
+froze mid-sentence. One bypass build later, the commands fly true, the menus are
+stable every time, and the game walks through the credits AND the menu on the fast
+path. The remaining stall at continue is a different, shallower animal (the
+reservation-wait layer under JIT context) - and it is next.
+
+Technical:
+- the bug: JIT MFC parameter staging put LSA into EAL on repeated atomics
+  (ring evidence:  vs gold''s )
+- the fix (probe): LLVM WRCH bypass - MFC_LSA/EAH/EAL/Size/TagID/Cmd all route
+  through the shared C++ helper; struct-truth always (commit ed5d4edc4)
+- verified on console: params fire clean ( everywhere),
+  kernel park sites moved and diversified, workload signals flow (sig 4000)
+- instruments that carried the night: the mega-ring (4096-deep op history,
+  drained per status pulse), the three-view park dump, the block trails
+- known remaining: the poll->idle branch never fires under JIT (kernels
+  livelock-poll the +0x80 line, +0x00/spuIdling never touched); SPU
+  Verification armed as the star witness for the codegen layer
+- observer-effect lesson: the full mega flood kills the interpreter''s timing
+  (credits trap); the ring is a JIT-side instrument only
