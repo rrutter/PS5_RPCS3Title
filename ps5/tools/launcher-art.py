@@ -10,6 +10,8 @@
 - launcher/mark.png: the mark alone and large, for the intro's white screen. The
   mark is kongatime's crowned 3 (ps5/art/icon-source.webp, the title's icon) as
   a rounded tile.
+- launcher/trash.png, launcher/patch.png: the Delete and Patches buttons' icons
+  (--icons-only writes just these, without the network).
 
 Needs fontTools and Pillow. Run once; commit what it writes.
 """
@@ -161,10 +163,45 @@ def write_trash():
     print(f"wrote {target.relative_to(ROOT)}")
 
 
+def write_patch():
+    """The Patches button's plaster, white, at three times its 20-pixel size: a
+    strip with a pad in the middle and holes at its ends, laid across the corner."""
+    ss = 8
+    n = 20 * SCALE * ss
+    u = n / 20  # one virtual pixel
+    w = round(1.6 * u)
+    white = (255, 255, 255, 255)
+    # Drawn level, on a square the strip's length across, then turned
+    big = round(n * 1.5)
+    image = Image.new("RGBA", (big, big), (0, 0, 0, 0))
+    d = ImageDraw.Draw(image)
+    cx = cy = big / 2
+    half_l, half_h = 9.4 * u, 3.8 * u
+    d.rounded_rectangle([cx - half_l, cy - half_h, cx + half_l, cy + half_h], radius=half_h, outline=white, width=w)
+    pad = 2.7 * u
+    d.rounded_rectangle([cx - pad, cy - half_h + w / 2, cx + pad, cy + half_h - w / 2], radius=0.8 * u, fill=white)
+    r = 0.62 * u
+    for side in (-1, 1):
+        for dx, dy in ((5.0, -1.2), (5.0, 1.2), (6.9, 0)):
+            x, y = cx + side * dx * u, cy + dy * u
+            d.ellipse([x - r, y - r, x + r, y + r], fill=white)
+    image = image.rotate(45, resample=Image.BICUBIC)
+    left = (big - n) // 2
+    image = image.crop((left, left, left + n, left + n)).resize((n // ss, n // ss), Image.LANCZOS)
+    target = ASSETS / "launcher" / "patch.png"
+    image.save(target, optimize=True)
+    print(f"wrote {target.relative_to(ROOT)}")
+
+
 def main():
+    if "--icons-only" in sys.argv:
+        write_trash()
+        write_patch()
+        return
     if "--logo-only" not in sys.argv:
         write_fonts(fetch("inter"))
         write_trash()
+        write_patch()
     write_logo(fetch("orbitron"))
     write_mark()
 

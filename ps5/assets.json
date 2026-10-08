@@ -144,6 +144,19 @@
       "licence": "MIT",
       "url": "https://github.com/KongaTime/ps5_rpcs3title",
       "changes": "drawn by ps5/tools/launcher-art.py"
+    },
+    {
+      "path": "launcher/patch.png",
+      "from": "file",
+      "source": "ps5/assets/launcher/patch.png",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "The launcher's Patches icon",
+      "author": "kongatime (PS5 RPCS3 title)",
+      "licence": "MIT",
+      "url": "https://github.com/KongaTime/ps5_rpcs3title",
+      "changes": "drawn by ps5/tools/launcher-art.py"
     }
   ]
 }

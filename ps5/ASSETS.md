@@ -17,3 +17,4 @@ submodule) stay out, and the samples that use them get the replacements here.
 | `launcher/mark.png` | [The launcher intro's mark](https://github.com/KongaTime/ps5_rpcs3title) (drawn by ps5/tools/launcher-art.py: kongatime's crowned 3 (ps5/art/icon-source.webp) as a rounded tile, 450 pixels square) | kongatime (PS5 RPCS3 title) | MIT | rpcs3 |
 | `launcher/intro.wav` | [The launcher intro's sound](https://github.com/KongaTime/ps5_rpcs3title) (synthesised by ps5/tools/intro-sound.py from sine and saw waves and noise; nothing sampled) | kongatime (PS5 RPCS3 title) | MIT | rpcs3 |
 | `launcher/trash.png` | [The launcher's Delete icon](https://github.com/KongaTime/ps5_rpcs3title) (drawn by ps5/tools/launcher-art.py) | kongatime (PS5 RPCS3 title) | MIT | rpcs3 |
+| `launcher/patch.png` | [The launcher's Patches icon](https://github.com/KongaTime/ps5_rpcs3title) (drawn by ps5/tools/launcher-art.py) | kongatime (PS5 RPCS3 title) | MIT | rpcs3 |

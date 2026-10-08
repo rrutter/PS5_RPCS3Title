@@ -50,10 +50,15 @@ constexpr int rpcs3_ps5_pad_players = 4;
 struct rpcs3_ps5_title {
 	void (*poll_pads)(rpcs3_ps5_pad pads[rpcs3_ps5_pad_players]);
 	void (*trace)(const char *line);
+	const char *build;
 };
 int rpcs3_ps5_run(const char *boot_path, const rpcs3_ps5_title &title);
 
 namespace {
+
+/* This build's number, which the launcher shows and the trace and RPCS3.log
+ * start with: one more for each build that goes to the console */
+const char *const titleBuild = "98";
 
 /* The console's buttons as the PS3's: OPTIONS is START, the touch pad's click
  * SELECT; the PS button stays the shell's */
@@ -142,7 +147,7 @@ extern "C" int ps5_title_main(void)
 		fclose(file);
 		chmod(tracePath, 0666);
 	}
-	trace("title: start");
+	trace((std::string("title: start, build ") + titleBuild).c_str());
 	std::string boot;
 	if (std::ifstream file{"/app0/rpcs3-boot.txt"}) {
 		std::getline(file, boot);
@@ -150,7 +155,7 @@ extern "C" int ps5_title_main(void)
 			boot.pop_back();
 	}
 	trace(boot.empty() ? "title: starting RPCS3 without a game" : ("title: booting " + boot).c_str());
-	const rpcs3_ps5_title title{ pollPads, trace };
+	const rpcs3_ps5_title title{ pollPads, trace, titleBuild };
 	const int status = rpcs3_ps5_run(boot.c_str(), title);
 	trace(("title: RPCS3 stopped, status " + std::to_string(status)).c_str());
 	return status;
