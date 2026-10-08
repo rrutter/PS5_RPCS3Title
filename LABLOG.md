@@ -235,10 +235,10 @@ reservation-wait layer under JIT context) - and it is next.
 
 Technical:
 - the bug: JIT MFC parameter staging put LSA into EAL on repeated atomics
-  (ring evidence:  vs gold''s )
+  (ring evidence: mfc d0 2d80 2d80 vs gold's mfc d0 2d80 5631a380)
 - the fix (probe): LLVM WRCH bypass - MFC_LSA/EAH/EAL/Size/TagID/Cmd all route
   through the shared C++ helper; struct-truth always (commit ed5d4edc4)
-- verified on console: params fire clean ( everywhere),
+- verified on console: params fire clean (mfc d0 2d80 5631a380 everywhere),
   kernel park sites moved and diversified, workload signals flow (sig 4000)
 - instruments that carried the night: the mega-ring (4096-deep op history,
   drained per status pulse), the three-view park dump, the block trails
