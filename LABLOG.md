@@ -247,3 +247,25 @@ Technical:
   Verification armed as the star witness for the codegen layer
 - observer-effect lesson: the full mega flood kills the interpreter''s timing
   (credits trap); the ring is a JIT-side instrument only
+
+## The GETLLAR-cache probe (acquitted) + the real ghost: a block never entered
+
+Story: the stale-cache theory was beautiful and WRONG - the wedge persists with
+the fast path gated off (params fired clean, still rc 5+7 with idle 0). But the
+rings gave up the sharpest fact of the hunt: the interpreter's work-discovery
+read happens at pc 0x00d24 (getllar on the struct''s +0x00 line), and NO JIT run
+ever dispatches that block - from boot. The kernel''s scheduling code exists in
+both engines'' LS; the JITs just never enter it. Control-flow divergence in the
+shared recompiler analysis, not a data bug.
+
+Technical:
+- e5c44ff86 probe: /app0/rpcs3-nogetllarcache.txt gates the GETLLAR same-line
+  fast path; wedge identical with it off -> acquitted
+- gold ring: getllar 5631a300 at pc 0x00d24 (kernel0); JIT rings: zero +0x00
+  ops ever; parks at 0x1300-0x134c/0x26bc (the +0x80 signal-poll loop)
+- next: why is 0x00d24 unreachable to the JITs - spu_recompiler_base block
+  discovery of the SPURS kernel/sys-service workload image
+- also on the record: FMV stutter = USB/exFAT stream churn + cache-write
+  contention (shelved per captain: read-ahead buffering + internal staging are
+  the future fixes); audio buffer 34ms restored; signal/dma/spurs-trace floods
+  retired; frame-gen counter visible (0 = off)
