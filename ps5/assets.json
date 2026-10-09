@@ -133,6 +133,19 @@
       "changes": "synthesised by ps5/tools/intro-sound.py from sine and saw waves and noise; nothing sampled"
     },
     {
+      "path": "launcher/sounds",
+      "from": "file",
+      "source": "ps5/assets/launcher/sounds",
+      "used_by": [
+        "rpcs3"
+      ],
+      "title": "The menus' sounds",
+      "author": "kongatime (PS5 RPCS3 title)",
+      "licence": "MIT",
+      "url": "https://github.com/KongaTime/ps5_rpcs3title",
+      "changes": "synthesised by ps5/tools/menu-sounds.py from sine and saw waves and noise; nothing sampled"
+    },
+    {
       "path": "launcher/trash.png",
       "from": "file",
       "source": "ps5/assets/launcher/trash.png",
