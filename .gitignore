@@ -4,3 +4,6 @@ klog/
 .deps/
 imgui.ini
 __pycache__/
+
+# lab: keep our notes local - never sync .md files
+*.md
